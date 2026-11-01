@@ -1,4 +1,5 @@
 {
+  "modelVersion": "26.0.0",
   "name": "emotional-robot",
   "version": "0.1.0",
   "description": "HarmonyOS AI companion",

@@ -2,7 +2,7 @@
 
 面向华为手机的鸿蒙原生 AI 陪伴应用。目标系统已确定为 **HarmonyOS 7.0.0**，模型服务采用 **DeepSeek**。
 
-当前已实现可运行的 Python 后端，以及待 DevEco Studio 编译验证的 ArkTS 客户端源码。后端支持文字流式对话、会话持久化、记忆管理、来源与版本记录、用户与角色隔离、持久化抽取和删除任务。
+当前已实现可运行的 Python 后端，ArkTS 客户端已使用本机 API 26 SDK 编译并生成未签名 HAP。后端支持文字流式对话、会话持久化、记忆管理、来源与版本记录、用户与角色隔离、持久化抽取和删除任务。
 
 ## 按步骤实施
 
@@ -60,7 +60,7 @@ DeepSeek 产生的记忆候选需在管理页确认后才参与长期召回。�
 
 用支持 HarmonyOS 7 SDK 的 DevEco Studio 打开 [apps/harmony](apps/harmony)。操作说明见[客户端运行指引](apps/harmony/README.md)。页面包括聊天、历史会话、记忆管理和服务连接设置。
 
-本机已准备 Node.js 24、JDK 21 和华为 DevEco CLI；API 26 SDK 本体仍待官网下载包，尚未生成 HAP 或完成真机适配。安装状态与检查入口见[SDK 安装记录](docs/sdk-setup.md)。
+本机已接入 `D:\Huawei\DevEco Studio` 中的 DevEco Studio 26.0.0.865、API 26 SDK 26.0.0.105 和 Hvigor 6.26.9。构建脚本优先使用 Studio 自带的 Node 与 JDK，ArkTS 检查无错误，已生成 `apps/harmony/entry/build/default/outputs/default/entry-default-unsigned.hap`。手机尚未连接，调试签名与真机联调待完成。复现步骤见[SDK 安装记录](docs/sdk-setup.md)。
 
 ## 检查与测试
 

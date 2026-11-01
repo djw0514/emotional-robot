@@ -229,14 +229,14 @@ struct Index {
 
   private async deleteMemory(): Promise<void> {
     const targetId: string = this.detailId;
-    const result = await this.getUIContext().getPromptAction().showDialog({
-      title: '忘记这条记忆？',
-      message: '会清除关联来源、同一来源产生的记忆及已有助手回复，防止再次记起。',
-      buttons: [{ text: '取消', color: '#50685E' }, { text: '忘记', color: '#AE534D' }]
-    });
-    if (result.index !== 1) { return; }
     this.working = true;
     try {
+      const result = await this.getUIContext().getPromptAction().showDialog({
+        title: '忘记这条记忆？',
+        message: '会清除关联来源、同一来源产生的记忆及已有助手回复，防止再次记起。',
+        buttons: [{ text: '取消', color: '#50685E' }, { text: '忘记', color: '#AE534D' }]
+      });
+      if (result.index !== 1) { return; }
       let job = await this.api.request<DeletionJob>('/v1/memories/' + targetId, http.RequestMethod.DELETE);
       this.detailLoad++;
       this.detailId = '';
@@ -278,7 +278,8 @@ struct Index {
           ListItem() {
             Column({ space: 6 }) {
               Text(message.role === 'user' ? '你' : '心伴').fontSize(12).fontColor('#768078')
-              Text(message.content || '正在想…').fontSize(17).lineHeight(26).textSelection(TextSelectableMode.SELECTABLE)
+              Text(message.content || '正在想…').fontSize(17).lineHeight(26)
+                .textSelectable(TextSelectableMode.SELECTABLE_UNFOCUSABLE)
             }.alignItems(HorizontalAlign.Start).padding(16).width('100%')
             .backgroundColor(message.role === 'user' ? '#E5EEE7' : '#FFFFFF').borderRadius(18)
           }

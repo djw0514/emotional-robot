@@ -58,7 +58,7 @@ export class ApiClient {
     });
     request.on('dataReceive', (chunk: ArrayBuffer): void => {
       try {
-        parser.feed(decoder.decodeWithStream(new Uint8Array(chunk), { stream: true }));
+        parser.feed(decoder.decodeToString(new Uint8Array(chunk), { stream: true }));
       } catch (_) {
         streamError = '回复解析失败，请重试';
       }
@@ -74,7 +74,7 @@ export class ApiClient {
         connectTimeout: 10000,
         readTimeout: 120000
       });
-      parser.feed(decoder.decodeWithStream(new Uint8Array(0), { stream: false }));
+      parser.feed(decoder.decodeToString(new Uint8Array(0), { stream: false }));
       if (code !== 200) {
         throw new Error(code === 409 ? '该消息已提交，请刷新后继续' : '连接失败，请检查口令和服务地址');
       }

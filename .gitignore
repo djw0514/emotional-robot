@@ -23,6 +23,7 @@ dist/
 # HarmonyOS local build and signing settings
 .idea/
 .hvigor/
+/apps/harmony/.cache/
 oh_modules/
 build/
 local.properties
