@@ -18,3 +18,26 @@ jobs:
       - run: python -m pytest -q
       - run: npm test
       - run: python scripts/smoke.py
+  postgres-vector:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: robot
+          POSTGRES_PASSWORD: test-password
+          POSTGRES_DB: robot_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U robot -d robot_test"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      ROBOT_TEST_POSTGRES_URL: postgresql+psycopg://robot:test-password@127.0.0.1:5432/robot_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.lock
+      - run: python -m pip install -e . --no-deps
+      - run: python -m pytest -q tests/test_postgres.py

@@ -50,6 +50,8 @@ def main():
             ROBOT_DEMO_MODE="true",
             ROBOT_PROVIDER="demo",
             ROBOT_AUTO_WORKER="true",
+            ROBOT_EMBEDDING_PROVIDER="none",
+            ROBOT_DELETION_LEDGER_PATH=str(Path(directory) / "deletions.sqlite"),
         )
         server = subprocess.Popen(
             [sys.executable, "-m", "emotional_robot.cli", "serve", "--port", str(port)],
@@ -64,7 +66,14 @@ def main():
             with httpx.Client(
                 base_url=base, headers={"Authorization": f"Bearer {token}"}, timeout=10
             ) as client:
-                wait_until(lambda: client.get("/healthz").is_success)
+
+                def ready():
+                    if server.poll() is not None:
+                        detail = server.stderr.read().decode("utf-8", errors="replace")
+                        raise RuntimeError("Local test server exited: " + detail[-8000:])
+                    return client.get("/healthz").is_success
+
+                wait_until(ready, seconds=30)
                 assert httpx.get(base + "/v1/memories").status_code == 401
                 conversation = client.post("/v1/conversations", json={}).json()["id"]
                 first = client.post(

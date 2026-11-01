@@ -8,7 +8,11 @@ from fastapi.testclient import TestClient
 @pytest.fixture
 def system(tmp_path):
     settings = Settings(
-        database_url=f"sqlite:///{tmp_path / 'test.db'}", auto_worker=False, demo_mode=False
+        database_url=f"sqlite:///{tmp_path / 'test.db'}",
+        auto_worker=False,
+        demo_mode=False,
+        embedding_provider="none",
+        deletion_ledger_path=tmp_path / "deletions.sqlite",
     )
     app = create_app(settings)
     with app.state.factory.begin() as session:

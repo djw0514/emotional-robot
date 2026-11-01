@@ -1,0 +1,15 @@
+{
+  "questions": 100,
+  "memories": 20,
+  "model": "BAAI/bge-small-zh-v1.5",
+  "model_id": "72d68252515e1dbd84bb6f582942c78ebe9b8c87da34d1e9d58a2ba5e25bbe7d",
+  "dimensions": 512,
+  "threshold": 0.35,
+  "p50_ms": 18.61,
+  "p95_ms": 20.88,
+  "keyword_top1": 0.51,
+  "keyword_recall5": 0.6,
+  "hybrid_top1": 0.96,
+  "hybrid_recall5": 0.99,
+  "scope": "development synthetic retrieval set; not an independent holdout or answer-quality score"
+}

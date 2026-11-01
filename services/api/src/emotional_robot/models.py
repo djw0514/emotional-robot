@@ -1,6 +1,7 @@
 import time
 import uuid
 
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import (
     JSON,
     Boolean,
@@ -123,3 +124,21 @@ class ChatRun(Base):
     content: Mapped[str] = mapped_column(Text, default="")
     memory_ids: Mapped[list] = mapped_column(JSON, default=list)
     created_at: Mapped[float] = mapped_column(Float, default=time.time)
+
+
+class MemoryEmbedding(Base):
+    __tablename__ = "memory_embeddings"
+    __table_args__ = (UniqueConstraint("memory_id", "model_id"),)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=identifier)
+    memory_id: Mapped[str] = mapped_column(ForeignKey("memories.id"), index=True)
+    revision: Mapped[int] = mapped_column(Integer)
+    model_id: Mapped[str] = mapped_column(String(64), index=True)
+    dimensions: Mapped[int] = mapped_column(Integer)
+    embedding: Mapped[list] = mapped_column(Vector().with_variant(JSON, "sqlite"))
+
+
+class DeletionReceipt(Base):
+    __tablename__ = "deletion_receipts"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True)
+    applied_at: Mapped[float] = mapped_column(Float, default=time.time)

@@ -32,3 +32,9 @@ local.properties
 data/private/
 evals/results/
 *.log
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*

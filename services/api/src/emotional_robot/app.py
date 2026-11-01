@@ -10,7 +10,9 @@ from sqlalchemy import func, select, update
 
 from .config import Settings
 from .db import make_database
-from .memory import add_memory, as_memory, bump_epoch, owned, patch_memory, recall, request_deletion
+from .embeddings import make_embedder
+from .ledger import DeletionLedger, replay_deletions
+from .memory import add_memory, as_memory, bump_epoch, owned, patch_memory, request_deletion
 from .models import (
     ChatRun,
     Conversation,
@@ -22,19 +24,24 @@ from .models import (
     User,
 )
 from .providers import ProviderError, make_provider
+from .retrieval import Retriever
 from .schemas import ConversationInput, MemoryInput, MemoryPatch, MessageInput, SettingsPatch
 from .security import seed_demo, token_digest
 from .worker import Worker
 
 
-def create_app(settings: Settings | None = None, provider=None):
+def create_app(settings: Settings | None = None, provider=None, embedder=None):
     settings = settings or Settings()
     provider = provider or make_provider(settings)
     engine, factory = make_database(settings.database_url)
-    worker = Worker(factory, provider, settings.worker_poll_seconds)
+    embedder = embedder or make_embedder(settings)
+    retriever = Retriever(embedder, settings.semantic_min_score)
+    ledger = DeletionLedger(settings.deletion_ledger_path)
+    worker = Worker(factory, provider, settings.worker_poll_seconds, embedder=embedder)
 
     @asynccontextmanager
     async def lifespan(_):
+        replay_deletions(factory, ledger)
         if settings.demo_mode:
             with factory.begin() as session:
                 seed_demo(session, settings.demo_token.get_secret_value())
@@ -46,6 +53,7 @@ def create_app(settings: Settings | None = None, provider=None):
 
     app = FastAPI(title="Emotional Robot", version="0.1.0", lifespan=lifespan)
     app.state.factory, app.state.worker, app.state.settings = factory, worker, settings
+    app.state.retriever, app.state.ledger = retriever, ledger
     bearer = HTTPBearer(auto_error=False)
 
     def authenticate(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)) -> str:
@@ -67,7 +75,12 @@ def create_app(settings: Settings | None = None, provider=None):
 
     @app.get("/healthz")
     def health():
-        return {"status": "ok", "provider": settings.provider, "demo_mode": settings.demo_mode}
+        return {
+            "status": "ok",
+            "provider": settings.provider,
+            "demo_mode": settings.demo_mode,
+            "retrieval": "hybrid" if embedder else "keyword",
+        }
 
     @app.get("/v1/me")
     def me(user_id=Depends(authenticate)):
@@ -134,7 +147,9 @@ def create_app(settings: Settings | None = None, provider=None):
     def new_memory(body: MemoryInput, user_id=Depends(authenticate)):
         with factory.begin() as session:
             lock_user(session, user_id)
-            return as_memory(add_memory(session, user_id, **body.model_dump()))
+            return as_memory(
+                add_memory(session, user_id, **body.model_dump(), index_model=retriever.model_id)
+            )
 
     @app.get("/v1/memories")
     def memories(
@@ -145,10 +160,13 @@ def create_app(settings: Settings | None = None, provider=None):
         limit: int = Query(50, ge=1, le=200),
         user_id=Depends(authenticate),
     ):
+        query_vector = retriever.prepare(query) if query else None
         with factory() as session:
             if query:
                 return {
-                    "items": recall(session, user_id, character_id, query, min(limit, 20)),
+                    **retriever.search(
+                        session, user_id, character_id, query, min(limit, 20), vector=query_vector
+                    ),
                     "offset": 0,
                 }
             stmt = select(Memory).where(
@@ -204,14 +222,21 @@ def create_app(settings: Settings | None = None, provider=None):
         with factory.begin() as session:
             lock_user(session, user_id)
             return as_memory(
-                patch_memory(session, owned(session, Memory, memory_id, user_id), body)
+                patch_memory(
+                    session,
+                    owned(session, Memory, memory_id, user_id),
+                    body,
+                    index_model=retriever.model_id,
+                )
             )
 
     @app.delete("/v1/memories/{memory_id}", status_code=202)
     def delete_memory(memory_id: str, user_id=Depends(authenticate)):
         with factory.begin() as session:
             lock_user(session, user_id)
-            task = request_deletion(session, owned(session, Memory, memory_id, user_id))
+            task = request_deletion(
+                session, owned(session, Memory, memory_id, user_id), ledger=ledger
+            )
             return {
                 "id": task.id,
                 "status": task.status,
@@ -275,6 +300,7 @@ def create_app(settings: Settings | None = None, provider=None):
 
     @app.post("/v1/conversations/{conversation_id}/messages")
     def chat(conversation_id: str, body: MessageInput, user_id=Depends(authenticate)):
+        query_vector = retriever.prepare(body.content)
         with factory.begin() as session:
             lock_user(session, user_id)
             conversation = owned(session, Conversation, conversation_id, user_id)
@@ -354,7 +380,9 @@ def create_app(settings: Settings | None = None, provider=None):
                     )
                 ]
                 if replay
-                else recall(session, user_id, conversation.character_id, body.content)
+                else retriever.search(
+                    session, user_id, conversation.character_id, body.content, vector=query_vector
+                )["items"]
             )
             memory_refs = [
                 {"id": m["id"], "content": m["content"], "revision": m["revision"]}

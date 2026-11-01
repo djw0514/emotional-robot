@@ -5,10 +5,10 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from .models import Base
+from .migrations.manager import migrate
 
 
-def make_database(url: str):
+def make_database(url: str, *, initialize=True):
     parsed = make_url(url)
     options = {"pool_pre_ping": True}
     if parsed.get_backend_name() == "sqlite":
@@ -27,5 +27,6 @@ def make_database(url: str):
             cursor.execute("PRAGMA journal_mode=WAL")
             cursor.close()
 
-    Base.metadata.create_all(engine)
+    if initialize:
+        migrate(engine)
     return engine, sessionmaker(engine, expire_on_commit=False)

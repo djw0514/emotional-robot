@@ -2,7 +2,7 @@
 
 本设计面向鸿蒙手机中的 AI 陪伴应用，目标是让角色记住用户确认的偏好和经历，同时允许用户查看、纠正和删除。目标方案以 PostgreSQL 为权威存储，pgvector 和关键词索引用于检索。以下包含完整目标模型与接口约定。
 
-当前迭代已经实现其中的文字与基础记忆流程，使用 SQLite 在本地运行，保留 PostgreSQL 连接兼容。关键词召回、来源与版本、确认、纠错、暂停和在线删除已落地；向量检索、完整时间模型和备份恢复仍是目标设计。当前实际范围以[实施清单](../implementation-plan.md)和生成的 [OpenAPI](../../packages/contracts/openapi.json) 为准。
+当前迭代已实现文字与基础记忆流程，使用 SQLite 在本地运行，并支持 PostgreSQL 连接。关键词与中文语义混合检索、来源与版本、确认、纠错、暂停、在线删除和 SQLite 备份恢复已落地；完整时间模型、跨节点恢复与第三方记忆引擎仍是后续工作。当前实际范围以[实施清单](../implementation-plan.md)、[数据运维指引](../operations.md)和生成的 [OpenAPI](../../packages/contracts/openapi.json) 为准。
 
 ## 记忆分层
 

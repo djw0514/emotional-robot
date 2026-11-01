@@ -4,14 +4,16 @@ import time
 from sqlalchemy import and_, case, or_, select, update
 
 from .memory import extraction_result, purge_deleted
-from .models import Message, Task, User
+from .models import Memory, Message, Task, User
+from .retrieval import save_embedding
 
 
 class Worker:
-    def __init__(self, factory, provider, interval: float = 0.5):
+    def __init__(self, factory, provider, interval: float = 0.5, *, embedder=None):
         self.factory, self.provider, self.interval = factory, provider, interval
         self.stop_event = threading.Event()
         self.thread = None
+        self.embedder = embedder
 
     def run_once(self) -> bool:
         now = time.time()
@@ -48,12 +50,28 @@ class Worker:
             payload, kind = task.payload, task.kind
         try:
             facts = []
+            vector = None
             if kind == "extract":
                 with self.factory() as session:
                     message = session.get(Message, payload["message_id"])
                     source = message.content if message and message.memory_allowed else ""
                 if source:
                     facts = self.provider.extract(source)
+            elif (
+                kind == "index" and self.embedder and payload["model_id"] == self.embedder.model_id
+            ):
+                with self.factory() as session:
+                    item = session.get(Memory, payload["memory_id"])
+                    source = (
+                        item.content
+                        if item
+                        and item.user_id == task.user_id
+                        and item.status == "active"
+                        and item.revision == payload["revision"]
+                        else ""
+                    )
+                if source:
+                    vector = self.embedder.documents([source])[0]
             with self.factory.begin() as session:
                 # A new lease holder must not be overwritten by a stale worker.
                 ownership = session.execute(
@@ -75,8 +93,16 @@ class Worker:
                 )
                 if kind == "delete":
                     purge_deleted(session, task)
-                else:
-                    extraction_result(session, task, facts)
+                elif kind == "index":
+                    if vector is not None:
+                        save_embedding(session, task, vector, self.embedder)
+                elif kind == "extract":
+                    extraction_result(
+                        session,
+                        task,
+                        facts,
+                        index_model=self.embedder.model_id if self.embedder else None,
+                    )
                 task.status, task.lease_until, task.error_code = "completed", 0, None
         except Exception:
             with self.factory.begin() as session:

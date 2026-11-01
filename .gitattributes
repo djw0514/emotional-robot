@@ -1,4 +1,8 @@
 * text=auto
+.gitattributes text eol=lf
+.gitignore text eol=lf
+.env.example text eol=lf
+*.lock text eol=lf
 *.py text eol=lf
 *.ets text eol=lf
 *.ts text eol=lf

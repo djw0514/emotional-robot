@@ -7,13 +7,16 @@ from sqlalchemy import delete, or_, select, update
 from .models import (
     ChatRun,
     Conversation,
+    DeletionReceipt,
     Memory,
+    MemoryEmbedding,
     MemoryEvidence,
     MemoryVersion,
     Message,
     Task,
     User,
 )
+from .retrieval import queue_index
 
 
 def owned(session, model, item_id: str, user_id: str):
@@ -107,6 +110,7 @@ def add_memory(
     predicate: str = "note",
     source_message_id=None,
     status="active",
+    index_model=None,
 ) -> Memory:
     item = Memory(
         user_id=user_id,
@@ -125,11 +129,12 @@ def add_memory(
     session.add(MemoryVersion(memory_id=item.id, revision=1, content=content, reason="created"))
     if source_message_id:
         session.add(MemoryEvidence(memory_id=item.id, message_id=source_message_id))
+    queue_index(session, item, index_model)
     session.flush()
     return item
 
 
-def patch_memory(session, item: Memory, patch) -> Memory:
+def patch_memory(session, item: Memory, patch, *, index_model=None) -> Memory:
     if item.status == "deleted":
         raise HTTPException(404, "资源不存在")
     values = {"revision": item.revision + 1, "updated_at": time.time()}
@@ -151,6 +156,7 @@ def patch_memory(session, item: Memory, patch) -> Memory:
     )
     if result.rowcount != 1:
         raise HTTPException(409, "记忆已更新，请刷新后重试")
+    session.execute(delete(MemoryEmbedding).where(MemoryEmbedding.memory_id == item.id))
     if patch.status == "active" and item.predicate != "note":
         previous = list(
             session.scalars(
@@ -214,11 +220,12 @@ def patch_memory(session, item: Memory, patch) -> Memory:
         )
     )
     bump_epoch(session, item.user_id)
+    queue_index(session, item, index_model)
     session.flush()
     return item
 
 
-def request_deletion(session, item: Memory) -> Task:
+def request_deletion(session, item: Memory, *, ledger=None) -> Task:
     existing = session.scalar(
         select(Task).where(
             Task.user_id == item.user_id, Task.kind == "delete", Task.dedupe_key == item.id
@@ -250,6 +257,10 @@ def request_deletion(session, item: Memory) -> Task:
         if old_size == (len(affected), len(source_ids)):
             break
     ids = list(affected)
+    if ledger:
+        journal_id = ledger.record(item.user_id, ids, source_ids)
+        session.add(DeletionReceipt(id=journal_id, user_id=item.user_id))
+    session.execute(delete(MemoryEmbedding).where(MemoryEmbedding.memory_id.in_(ids)))
     session.execute(
         update(Memory)
         .where(Memory.id.in_(ids), Memory.user_id == item.user_id)
@@ -300,9 +311,10 @@ def purge_deleted(session, task: Task):
     )
     session.execute(delete(MemoryVersion).where(MemoryVersion.memory_id.in_(ids)))
     session.execute(delete(MemoryEvidence).where(MemoryEvidence.memory_id.in_(ids)))
+    session.execute(delete(MemoryEmbedding).where(MemoryEmbedding.memory_id.in_(ids)))
 
 
-def extraction_result(session, task: Task, facts: list):
+def extraction_result(session, task: Task, facts: list, *, index_model=None):
     message = owned(session, Message, task.payload["message_id"], task.user_id)
     user = session.get(User, task.user_id)
     if not message.memory_allowed or not message.content or not user.memory_enabled:
@@ -346,6 +358,7 @@ def extraction_result(session, task: Task, facts: list):
             character_id=conversation.character_id,
             predicate=fact.predicate,
             source_message_id=message.id,
+            index_model=index_model,
             status="candidate"
             if conflict or task.payload.get("requires_confirmation", True)
             else "active",
