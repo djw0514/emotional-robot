@@ -60,7 +60,7 @@ DeepSeek 产生的记忆候选需在管理页确认后才参与长期召回。�
 
 用支持 HarmonyOS 7 SDK 的 DevEco Studio 打开 [apps/harmony](apps/harmony)。操作说明见[客户端运行指引](apps/harmony/README.md)。页面包括聊天、历史会话、记忆管理和服务连接设置。
 
-本机暂未找到鸿蒙 SDK 或构建工具，当前不能声称已生成 HAP 或完成真机适配。
+本机已准备 Node.js 24、JDK 21 和华为 DevEco CLI；API 26 SDK 本体仍待官网下载包，尚未生成 HAP 或完成真机适配。安装状态与检查入口见[SDK 安装记录](docs/sdk-setup.md)。
 
 ## 检查与测试
 
@@ -102,4 +102,4 @@ PostgreSQL 部署准备见 [infra/compose.yaml](infra/compose.yaml)。在安装 
 | [数据运维指引](docs/operations.md) | 数据库升级、索引重建、快照与删除日志恢复 |
 | [中文检索样例](evals/chinese-retrieval.json) | 100 道人工合成的开发检索题 |
 
-远程 `origin` 已关联 [djw0514/emotional-robot](https://github.com/djw0514/emotional-robot)。已启用本地 Git 管理，按实施阶段保存独立提交；尚未推送到 GitHub。
+远程 `origin` 已关联 [djw0514/emotional-robot](https://github.com/djw0514/emotional-robot)，已推送 `main` 分支，后续按实施阶段保存独立提交。
