@@ -1,0 +1,34 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.cer
+*.p7b
+
+# Python and JavaScript build artifacts
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.pytest_tmp/
+*.egg-info/
+node_modules/
+dist/
+
+# HarmonyOS local build and signing settings
+.idea/
+.hvigor/
+oh_modules/
+build/
+local.properties
+/apps/harmony/build-profile.json5
+
+# User conversations and evaluation output
+data/private/
+evals/results/
+*.log

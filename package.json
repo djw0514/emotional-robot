@@ -1,0 +1,6 @@
+{
+  "name": "emotional-robot-checks",
+  "private": true,
+  "scripts": { "test": "node --test scripts/test-sse.mjs" },
+  "devDependencies": { "typescript": "5.9.3" }
+}

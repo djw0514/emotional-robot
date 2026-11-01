@@ -1,0 +1,226 @@
+{
+  "checked_on": "2026-11-01",
+  "date_timezone": "UTC for commit timestamps",
+  "method": "Selected fields from unauthenticated public GitHub REST repository and latest-default-branch commit responses. README and selected LICENSE/source files reviewed separately.",
+  "interpretation": "A recent default-branch commit is not proof of a recent feature change or production readiness. API license recognition does not replace file-level license review.",
+  "repositories": [
+    {
+      "repository": "mem0ai/mem0",
+      "url": "https://github.com/mem0ai/mem0",
+      "metadata_api": "https://api.github.com/repos/mem0ai/mem0",
+      "commits_api": "https://api.github.com/repos/mem0ai/mem0/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "Apache-2.0",
+      "default_branch_commit": {
+        "sha": "753496cf1435d76c3a711f3af51303f7fdcb6420",
+        "committer_date": "2026-10-30T21:35:34Z",
+        "url": "https://github.com/mem0ai/mem0/commit/753496cf1435d76c3a711f3af51303f7fdcb6420"
+      },
+      "review_note": "Current migration guide describes ADD-only automatic extraction and removal of external graph integration from OSS. Explicit update/delete APIs remain in the inspected Memory implementation."
+    },
+    {
+      "repository": "getzep/graphiti",
+      "url": "https://github.com/getzep/graphiti",
+      "metadata_api": "https://api.github.com/repos/getzep/graphiti",
+      "commits_api": "https://api.github.com/repos/getzep/graphiti/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "Apache-2.0",
+      "default_branch_commit": {
+        "sha": "16bf514380de4e44884aed6779bece220e6fe470",
+        "committer_date": "2026-11-01T01:04:59Z",
+        "url": "https://github.com/getzep/graphiti/commit/16bf514380de4e44884aed6779bece220e6fe470"
+      }
+    },
+    {
+      "repository": "letta-ai/letta",
+      "url": "https://github.com/letta-ai/letta",
+      "metadata_api": "https://api.github.com/repos/letta-ai/letta",
+      "commits_api": "https://api.github.com/repos/letta-ai/letta/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "Apache-2.0",
+      "default_branch_commit": {
+        "sha": "8816d3a8516893bfdc0fa14bfb1235226012e295",
+        "committer_date": "2026-10-18T22:28:01Z",
+        "url": "https://github.com/letta-ai/letta/commit/8816d3a8516893bfdc0fa14bfb1235226012e295"
+      },
+      "review_note": "README redirects active implementation to letta-code and identifies archive branch as retired V1 API server."
+    },
+    {
+      "repository": "letta-ai/letta-code",
+      "url": "https://github.com/letta-ai/letta-code",
+      "metadata_api": "https://api.github.com/repos/letta-ai/letta-code",
+      "commits_api": "https://api.github.com/repos/letta-ai/letta-code/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "Apache-2.0",
+      "default_branch_commit": {
+        "sha": "ebd590b11bef049884b923da5ed3f5d087af81e0",
+        "committer_date": "2026-11-01T04:06:12Z",
+        "url": "https://github.com/letta-ai/letta-code/commit/ebd590b11bef049884b923da5ed3f5d087af81e0"
+      }
+    },
+    {
+      "repository": "langchain-ai/langmem",
+      "url": "https://github.com/langchain-ai/langmem",
+      "metadata_api": "https://api.github.com/repos/langchain-ai/langmem",
+      "commits_api": "https://api.github.com/repos/langchain-ai/langmem/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "MIT",
+      "default_branch_commit": {
+        "sha": "839c3fa0fc2c118734611d5d86503e52fc3a3dd1",
+        "committer_date": "2026-10-30T19:35:50Z",
+        "url": "https://github.com/langchain-ai/langmem/commit/839c3fa0fc2c118734611d5d86503e52fc3a3dd1"
+      }
+    },
+    {
+      "repository": "memodb-io/memobase",
+      "url": "https://github.com/memodb-io/memobase",
+      "metadata_api": "https://api.github.com/repos/memodb-io/memobase",
+      "commits_api": "https://api.github.com/repos/memodb-io/memobase/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "Apache-2.0",
+      "default_branch_commit": {
+        "sha": "358c16bbc6d687937d79bc2f984a11c3be8da901",
+        "committer_date": "2026-01-11T03:43:56Z",
+        "url": "https://github.com/memodb-io/memobase/commit/358c16bbc6d687937d79bc2f984a11c3be8da901"
+      }
+    },
+    {
+      "repository": "moeru-ai/airi",
+      "url": "https://github.com/moeru-ai/airi",
+      "metadata_api": "https://api.github.com/repos/moeru-ai/airi",
+      "commits_api": "https://api.github.com/repos/moeru-ai/airi/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "MIT",
+      "default_branch_commit": {
+        "sha": "259b6188a7209a46bd535fa011340486654da8df",
+        "committer_date": "2026-11-01T11:10:06Z",
+        "url": "https://github.com/moeru-ai/airi/commit/259b6188a7209a46bd535fa011340486654da8df"
+      }
+    },
+    {
+      "repository": "Open-LLM-VTuber/Open-LLM-VTuber",
+      "url": "https://github.com/Open-LLM-VTuber/Open-LLM-VTuber",
+      "metadata_api": "https://api.github.com/repos/Open-LLM-VTuber/Open-LLM-VTuber",
+      "commits_api": "https://api.github.com/repos/Open-LLM-VTuber/Open-LLM-VTuber/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "NOASSERTION",
+      "default_branch_commit": {
+        "sha": "992309c0aa19845960228f880013d4685fde93b5",
+        "committer_date": "2026-05-15T07:18:03Z",
+        "url": "https://github.com/Open-LLM-VTuber/Open-LLM-VTuber/commit/992309c0aa19845960228f880013d4685fde93b5"
+      },
+      "review_note": "API license detection is NOASSERTION. Inspected LICENSE explicitly uses MIT for code, except separately licensed Live2D sample models."
+    },
+    {
+      "repository": "SillyTavern/SillyTavern",
+      "url": "https://github.com/SillyTavern/SillyTavern",
+      "metadata_api": "https://api.github.com/repos/SillyTavern/SillyTavern",
+      "commits_api": "https://api.github.com/repos/SillyTavern/SillyTavern/commits?per_page=1",
+      "default_branch": "release",
+      "github_archived": false,
+      "api_license_spdx": "AGPL-3.0",
+      "default_branch_commit": {
+        "sha": "06bde939fb1e9c4c8d8641d810f0a916b5bce127",
+        "committer_date": "2026-09-14T19:01:34Z",
+        "url": "https://github.com/SillyTavern/SillyTavern/commit/06bde939fb1e9c4c8d8641d810f0a916b5bce127"
+      }
+    },
+    {
+      "repository": "SJYssr/HarmonyOS-X-Deepseek-",
+      "url": "https://github.com/SJYssr/HarmonyOS-X-Deepseek-",
+      "metadata_api": "https://api.github.com/repos/SJYssr/HarmonyOS-X-Deepseek-",
+      "commits_api": "https://api.github.com/repos/SJYssr/HarmonyOS-X-Deepseek-/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "GPL-3.0",
+      "default_branch_commit": {
+        "sha": "df6915776beba6b32d81d4f6f1ab618ce8728f1a",
+        "committer_date": "2025-09-03T09:46:56Z",
+        "url": "https://github.com/SJYssr/HarmonyOS-X-Deepseek-/commit/df6915776beba6b32d81d4f6f1ab618ce8728f1a"
+      },
+      "review_note": "README contains additional noncommercial wording alongside the API GPL-3.0 classification. Excluded as a source for copied implementation."
+    },
+    {
+      "repository": "xiaowu0162/LongMemEval",
+      "url": "https://github.com/xiaowu0162/LongMemEval",
+      "metadata_api": "https://api.github.com/repos/xiaowu0162/LongMemEval",
+      "commits_api": "https://api.github.com/repos/xiaowu0162/LongMemEval/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "MIT",
+      "default_branch_commit": {
+        "sha": "9e0b455f4ef0e2ab8f2e582289761153549043fc",
+        "committer_date": "2026-05-11T22:49:24Z",
+        "url": "https://github.com/xiaowu0162/LongMemEval/commit/9e0b455f4ef0e2ab8f2e582289761153549043fc"
+      }
+    },
+    {
+      "repository": "snap-research/locomo",
+      "url": "https://github.com/snap-research/locomo",
+      "metadata_api": "https://api.github.com/repos/snap-research/locomo",
+      "commits_api": "https://api.github.com/repos/snap-research/locomo/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "NOASSERTION",
+      "default_branch_commit": {
+        "sha": "3eb6f2c585f5e1699204e3c3bdf7adc5c28cb376",
+        "committer_date": "2024-08-13T03:21:21Z",
+        "url": "https://github.com/snap-research/locomo/commit/3eb6f2c585f5e1699204e3c3bdf7adc5c28cb376"
+      },
+      "review_note": "API license classification alone does not settle code and dataset permissions."
+    },
+    {
+      "repository": "LongLiveY96/chatcube",
+      "url": "https://github.com/LongLiveY96/chatcube",
+      "metadata_api": "https://api.github.com/repos/LongLiveY96/chatcube",
+      "commits_api": "https://api.github.com/repos/LongLiveY96/chatcube/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "MIT",
+      "default_branch_commit": {
+        "sha": "fd729d0f5c607763adc8ce054ad29171c66c78dc",
+        "committer_date": "2026-06-05T03:24:52Z",
+        "url": "https://github.com/LongLiveY96/chatcube/commit/fd729d0f5c607763adc8ce054ad29171c66c78dc"
+      },
+      "review_note": "README declares the repository archived and public updates discontinued; API archived=false. Treat as a static reference."
+    },
+    {
+      "repository": "huaweicodelabs/harmonyos-codelabs",
+      "url": "https://github.com/huaweicodelabs/harmonyos-codelabs",
+      "metadata_api": "https://api.github.com/repos/huaweicodelabs/harmonyos-codelabs",
+      "commits_api": "https://api.github.com/repos/huaweicodelabs/harmonyos-codelabs/commits?per_page=1",
+      "default_branch": "main",
+      "github_archived": false,
+      "api_license_spdx": "NOASSERTION",
+      "default_branch_commit": {
+        "sha": "6bd7031c0f715ffa41a0ec74eba884a188120bf7",
+        "committer_date": "2022-01-20T14:14:15Z",
+        "url": "https://github.com/huaweicodelabs/harmonyos-codelabs/commit/6bd7031c0f715ffa41a0ec74eba884a188120bf7"
+      },
+      "review_note": "Old sample collection; do not infer compatibility with current HarmonyOS SDK from organization ownership."
+    },
+    {
+      "repository": "pgvector/pgvector",
+      "url": "https://github.com/pgvector/pgvector",
+      "metadata_api": "https://api.github.com/repos/pgvector/pgvector",
+      "commits_api": "https://api.github.com/repos/pgvector/pgvector/commits?per_page=1",
+      "default_branch": "master",
+      "github_archived": false,
+      "api_license_spdx": "NOASSERTION",
+      "default_branch_commit": {
+        "sha": "1d5ef0a160cadec08f754528669ce17e20eab38c",
+        "committer_date": "2026-10-31T20:35:27Z",
+        "url": "https://github.com/pgvector/pgvector/commit/1d5ef0a160cadec08f754528669ce17e20eab38c"
+      },
+      "review_note": "API license detection is NOASSERTION. Inspected LICENSE contains PostgreSQL license text."
+    }
+  ]
+}
