@@ -2,18 +2,18 @@
 
 目标系统为 HarmonyOS 7.0.0，工程配置采用 API 26。华为官方页面将 HarmonyOS 7 标为 API 26。[华为开放能力说明](https://developer.huawei.com/consumer/cn/harmonyos-ai)
 
-当前已提供原生 ArkTS 页面、Stage UIAbility、清单、资源与构建配置。聊天、历史会话、记忆确认和纠错、来源、版本、删除及连接设置均调用真实后端接口。2026 年 11 月 2 日已用本机 API 26 SDK 编译通过并生成未签名 HAP；尚未签名或完成真机验证。
+当前已提供原生 ArkTS 页面、Stage UIAbility、清单、资源与构建配置。聊天、历史会话、记忆确认和纠错、来源、版本、删除及连接设置均调用真实后端接口。2026 年 11 月 2 日已用本机 API 26 SDK 编译、调试签名，并在 API 26 手机上安装和启动成功；聊天与记忆操作仍待手机联调。
 
 ## 构建与安装
 
 1. 使用已安装的 `D:\Huawei\DevEco Studio`，其中已包含 API 26 SDK。本机无需重新下载；其他电脑可从[华为官方下载页](https://developer.huawei.com/consumer/cn/deveco-studio/)安装配套版本。
 2. 用 IDE 打开本目录，复制 `build-profile.json5.example` 为 `build-profile.json5`。当前工作区已经准备该文件。
 3. 同步工程。当前已验证 `compileSdkVersion`、`compatibleSdkVersion`、`targetSdkVersion` 和工具链 `modelVersion` 均使用 `26.0.0`，配套 Hvigor 为 6.26.9。这里填写 SDK 的版本名称，不填系统营销名称 `7.0.0`。
-4. 在 Signing Configs 生成自己的调试签名，选择手机设备。实际 `build-profile.json5` 已忽略入库，避免签名资料进入仓库。
+4. 手机开启 USB 调试并连接电脑，在 Signing Configs 自动生成自己的调试签名。再到 Project/Product 选择 `default`，将其 Signing Config 设为已生成的 `default`，点击 Apply / OK。仅生成证书而未关联构建，仍会得到未签名包。实际 `build-profile.json5` 已忽略入库，避免签名资料进入仓库。
 5. 同步依赖，执行 Build HAP，然后安装到已开启开发者模式的手机。
 6. 打开设置页，填写后端地址及本应用的连接口令，连接后开始聊天。
 
-本仓库没有附带私有证书或 IDE 的二进制构建工具。未签名包位于 `entry/build/default/outputs/default/entry-default-unsigned.hap`，不能直接安装到手机。在项目根目录运行以下命令可复现检查和构建；CLI 首次安装步骤及版本记录见[SDK 安装记录](../../docs/sdk-setup.md)。
+本仓库没有附带私有证书或 IDE 的二进制构建工具。签名成功后用于安装的包是 `entry/build/default/outputs/default/entry-default-signed.hap`；同目录的 `entry-default-unsigned.hap` 不能直接安装到手机。在项目根目录运行以下命令可复现检查和构建；CLI 首次安装步骤及版本记录见[SDK 安装记录](../../docs/sdk-setup.md)。
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/harmony.ps1 doctor -ToolchainRoot 'D:\Huawei\DevEco Studio'
